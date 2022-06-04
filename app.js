@@ -5,7 +5,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 const xss = require('xss-clean');
 const rateLimiter = require('express-rate-limit');
-// end extra security packages
 
 const express = require('express');
 const app = express();
@@ -24,9 +23,10 @@ const connectDB = require('./db/connect');
   const authRouters = require('./routes/auth');
   const jobRouters = require('./routes/jobs');
 
-  const swaggerUI = require('swagger-ui-express');
-  const YAML = require('yamljs');
-  const swaggerDocument = require('./swagger.yaml')
+// Swagger
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
   app.set('trust proxy', 1);
   app.use(
@@ -40,10 +40,12 @@ const connectDB = require('./db/connect');
   app.use(cors());
   app.use(xss());  
 
-  app.get('/', (req, res)=>{
+  app.get('/', (req, res) => {
     res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
   });
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+
 
 // routes
 app.use('/api/v1/auth', authRouters); //domian_name/api/v1/auth...
