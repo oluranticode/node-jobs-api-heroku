@@ -19,21 +19,30 @@ const authenticateUser = require('./middleware/authentication');
 // connectDB
 const connectDB = require('./db/connect');
 
+
 // routers
   const authRouters = require('./routes/auth');
   const jobRouters = require('./routes/jobs');
 
+  const swaggerUI = require('swagger-ui-express');
+  const YAML = require('yamljs');
+  const swaggerDocument = require('./swagger.yaml')
+
 app.use(express.json());
 // extra packages
 app.set(' trust proxy', 1);
+app.use(helmet());
+app.use(cors());
+app.use(xss());
 app.use(rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, //limit each IP to 100 request per windowMs
-}));
-app.use(helmet())
-app.use(cors())
-app.use(xss())
+  //windowMs: 15 * 60 * 1000, // 15 minutes
+  //max: 100, //limit each IP to 100 request per windowMs 
+  windowMs: 60 * 1000, max: 60 }));
 
+  app.get('/', (req, res)=>{
+    res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
+  });
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // routes
 app.use('/api/v1/auth', authRouters); //domian_name/api/v1/auth...
