@@ -46,7 +46,6 @@ const swaggerDocument = YAML.load('./swagger.yaml');
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 
-
 // routes
 app.use('/api/v1/auth', authRouters); //domian_name/api/v1/auth...
 app.use('/api/v1/jobs', authenticateUser, jobRouters);
@@ -55,7 +54,7 @@ app.use('/api/v1/jobs', authenticateUser, jobRouters);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
